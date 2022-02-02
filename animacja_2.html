@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+<canvas id="okienko"></canvas>
+<script>
+
+//Początek układu współrzędnych
+var x0=window.innerWidth/2;
+var y0=window.innerHeight/2;
+
+//Współrzędne punktów początkowych
+var P=[0,0,200,200,200,200,-200,200,200,-200,-200,200,200,-200,200];
+var B=[200,0,0,200,200,200,200,-200,200,200,-200,-200,200,200,-200];
+var G=[0,200,0,200,200,200,-200,200,200,-200,200,-200,200,200,-200];
+var P2=[];
+var B2=[];
+var G2=[];
+var wP=[];
+var wB=[];
+var wG=[];
+var i, len, znak;
+var deg=0;
+
+var alfa_Z=0;
+var alfa_Y=0.6;
+var alfa_X=0.85;
+
+//Obrot wokół osi Z
+function obrot_Z(alfa_Z){
+
+  alfa=this.alfa_Z;
+
+for(i=0 ; i<5; i++){
+  P2[3*i]=P[3*i]*Math.cos(alfa*Math.PI/180)-P[3*i+1]*Math.sin(alfa*Math.PI/180);
+  P2[3*i+1]=P[3*i]*Math.sin(alfa*Math.PI/180)+P[3*i+1]*Math.cos(alfa*Math.PI/180);
+  P2[3*i+2]=P[3*i+2];
+  B2[3*i]=B[3*i]*Math.cos(alfa*Math.PI/180)-B[3*i+1]*Math.sin(alfa*Math.PI/180);
+  B2[3*i+1]=B[3*i]*Math.sin(alfa*Math.PI/180)+B[3*i+1]*Math.cos(alfa*Math.PI/180);
+  B2[3*i+2]=B[3*i+2];
+  G2[3*i]=G[3*i]*Math.cos(alfa*Math.PI/180)-G[3*i+1]*Math.sin(alfa*Math.PI/180);
+  G2[3*i+1]=G[3*i]*Math.sin(alfa*Math.PI/180)+G[3*i+1]*Math.cos(alfa*Math.PI/180);
+  G2[3*i+2]=G[3*i+2];
+  }
+
+for(i=0, len=P.length ; i<len; i++){
+  P[i]=P2[i];
+  B[i]=B2[i];
+  G[i]=G2[i];
+  }
+  
+}
+
+//Obrot wokół osi Y
+function obrot_Y(alfa_Y){
+  alfa=this.alfa_Y;
+
+for(i=0 ; i<5; i++){
+  P2[3*i+2]=P[3*i+2]*Math.cos(alfa*Math.PI/180)-P[3*i]*Math.sin(alfa*Math.PI/180);
+  P2[3*i]=P[3*i+2]*Math.sin(alfa*Math.PI/180)+P[3*i]*Math.cos(alfa*Math.PI/180);
+  P2[3*i+1]=P[3*i+1];
+  B2[3*i+2]=B[3*i+2]*Math.cos(alfa*Math.PI/180)-B[3*i]*Math.sin(alfa*Math.PI/180);
+  B2[3*i]=B[3*i+2]*Math.sin(alfa*Math.PI/180)+B[3*i]*Math.cos(alfa*Math.PI/180);
+  B2[3*i+1]=B[3*i+1];
+  G2[3*i+2]=G[3*i+2]*Math.cos(alfa*Math.PI/180)-G[3*i]*Math.sin(alfa*Math.PI/180);
+  G2[3*i]=G[3*i+2]*Math.sin(alfa*Math.PI/180)+G[3*i]*Math.cos(alfa*Math.PI/180);
+  G2[3*i+1]=G[3*i+1];
+}
+
+for(i=0, len=P.length ; i<len; i++){
+  P[i]=P2[i];
+  B[i]=B2[i];
+  G[i]=G2[i];
+  }
+ }
+
+//Obrot wokół osi X
+function obrot_X(alfa_X){
+  alfa=this.alfa_X;
+
+for(i=0 ; i<5; i++){
+  P2[3*i+1]=P[3*i+1]*Math.cos(alfa*Math.PI/180)-P[3*i+2]*Math.sin(alfa*Math.PI/180);
+  P2[3*i+2]=P[3*i+1]*Math.sin(alfa*Math.PI/180)+P[3*i+2]*Math.cos(alfa*Math.PI/180);
+  P2[3*i]=P[3*i];
+  B2[3*i+1]=B[3*i+1]*Math.cos(alfa*Math.PI/180)-B[3*i+2]*Math.sin(alfa*Math.PI/180);
+  B2[3*i+2]=B[3*i+1]*Math.sin(alfa*Math.PI/180)+B[3*i+2]*Math.cos(alfa*Math.PI/180);
+  B2[3*i]=B[3*i];
+  G2[3*i+1]=G[3*i+1]*Math.cos(alfa*Math.PI/180)-G[3*i+2]*Math.sin(alfa*Math.PI/180);
+  G2[3*i+2]=G[3*i+1]*Math.sin(alfa*Math.PI/180)+G[3*i+2]*Math.cos(alfa*Math.PI/180);
+  G2[3*i]=G[3*i];
+  }
+
+for(i=0, len=P.length ; i<len; i++){
+  P[i]=P2[i];
+  B[i]=B2[i];
+  G[i]=G2[i];
+  }
+}
+
+function rysuj(kolorek){
+const canvas = document.getElementById('okienko');
+canvas.width = window.innerWidth;
+canvas.height = 0.9*window.innerHeight;
+const ctx=canvas.getContext('2d');
+
+if (P[2]<0) {wP[0]=-1;} else {wP[0]=1;}
+
+for(i=1; i<=4; i++){
+  wP[2*i-1]=x0+wP[0]*P[3*i];
+  wP[2*i]=y0+wP[0]*P[3*i+1];
+  }
+
+// Poprawić jak jest z=0 to musi rysować obie jako kreski
+//  wP[2*i-1]=x0+P[3*i]*(1+wP[0]*P[3*i+2]/2000);
+//  wP[2*i]=y0+P[3*i+1]*(1+wP[0]*P[3*i+2]/2000);
+
+ctx.beginPath();
+    ctx.moveTo(wP[1],wP[2]);
+    ctx.lineTo(wP[3],wP[4]);
+    ctx.lineTo(wP[5],wP[6]);
+    ctx.lineTo(wP[7],wP[8]);
+    ctx.lineTo(wP[1],wP[2]);
+
+    ctx.strokeStyle=kolorek;
+    ctx.lineJoin="round";
+    ctx.lineCap="round";
+    ctx.lineWidth=20;
+    ctx.fillStyle = "OrangeRed";
+    ctx.fill();
+    ctx.stroke();
+ctx.closePath();
+
+if (B[2]<0) {wB[0]=-1;} else {wB[0]=1;}
+
+for(i=1; i<=4; i++){
+  wB[2*i-1]=x0+wB[0]*B[3*i];
+  wB[2*i]=y0+wB[0]*B[3*i+1];
+  }
+
+ctx.beginPath();
+    ctx.moveTo(wB[1],wB[2]);
+    ctx.lineTo(wB[3],wB[4]);
+    ctx.lineTo(wB[5],wB[6]);
+    ctx.lineTo(wB[7],wB[8]);
+    ctx.lineTo(wB[1],wB[2]);
+    ctx.strokeStyle=kolorek;
+    ctx.lineJoin="round";
+    ctx.lineCap="round";
+    ctx.lineWidth=20;
+    ctx.fillStyle = "Yellow";
+    ctx.fill();
+    ctx.stroke();
+ctx.closePath();
+
+if (G[2]<0) {wG[0]=-1;} else {wG[0]=1;}
+
+for(i=1; i<=4; i++){
+  wG[2*i-1]=x0+wG[0]*G[3*i];
+  wG[2*i]=y0+wG[0]*G[3*i+1];
+  }
+
+ctx.beginPath();
+    ctx.moveTo(wG[1],wG[2]);
+    ctx.lineTo(wG[3],wG[4]);
+    ctx.lineTo(wG[5],wG[6]);
+    ctx.lineTo(wG[7],wG[8]);
+    ctx.lineTo(wG[1],wG[2]);
+
+    ctx.strokeStyle=kolorek;
+    ctx.lineJoin="round";
+    ctx.lineCap="round";
+    ctx.lineWidth=20;
+    ctx.fillStyle = "Orange";
+    ctx.fill(); 
+    ctx.stroke();
+ctx.closePath();
+
+}
+
+function animacja(){
+  const kolor="DarkSlateGray";
+  const tyl="LightBlue";
+  const tlo="SteelBlue";
+
+
+
+  obrot_Z(alfa_Z=Math.sin(deg*Math.PI/180));
+  obrot_Y(alfa_Y=Math.sin(-2*deg*Math.PI/180));
+  obrot_X(alfa_X=Math.sin(3*deg*Math.PI/180));
+  rysuj(kolor);
+
+deg++;
+if (deg>900) deg-=900;
+
+  window.setTimeout(animacja,1);
+}
+
+
+</script>
+
+<style>
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+canvas{
+  background-color: DarkCyan;
+}
+body{
+  width: 100vw;
+  height: 100vh;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<script>
+const canvas = document.getElementById('okienko');
+canvas.width = window.innerWidth;
+canvas.height = 0.9*window.innerHeight;
+const ctx=canvas.getContext('2d');
+
+animacja();
+</script>
+<br>
+<audio controls loop autoplay>
+	<source src="joyride.mp3" type='audio/mpeg'>
+</audio>
+<br>
+
+</body>
+</html> 
